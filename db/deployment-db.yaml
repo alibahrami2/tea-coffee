@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tea-coffee-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tea-coffee-db
+  template:
+    metadata:
+      labels:
+        app: tea-coffee-db
+    spec:
+      containers:
+        - name: tea-coffee-db
+          image: db:v1
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: "ali"
+            - name: POSTGRES_PASSWORD 
+              value: "123"
+            - name: POSTGRES_DB 
+              value: "tea-coffee"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: tea-coffee-db
+spec:
+  selector:
+    app: tea-coffee-db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432

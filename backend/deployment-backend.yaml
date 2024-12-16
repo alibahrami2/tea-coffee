@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tea-coffee-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tea-coffee-backend
+  template:
+    metadata:
+      labels:
+        app: tea-coffee-backend
+    spec:
+      containers:
+      - name: tea-coffee-backend
+        image: backend:v1
+        ports:
+        - containerPort: 3000
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: tea-coffee-backend
+spec:
+  type: LoadBalancer
+  selector:
+    app: tea-coffee-backend
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000

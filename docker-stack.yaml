@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: frontend:v1
+    ports:
+      - "8080:80"
+    networks:
+      - tea-coffee-network
+
+  backend:
+    image: backend:v1
+    depends_on:
+      - db
+      - cache
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: admin
+      DB_PASSWORD: admin
+      DB_NAME: tea_coffee
+      CACHE_HOST: cache
+      CACHE_PORT: 6379
+    ports:
+      - "3000:3000"
+    networks:
+      - tea-coffee-network
+
+  db:
+    image: db:v1
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: tea_coffee
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - tea-coffee-network
+
+  cache:
+    image: docker.arvancloud.ir/redis:alpine
+    networks:
+      - tea-coffee-network
+
+volumes:
+  db-data:
+
+networks:
+  tea-coffee-network:
+    driver: overlay

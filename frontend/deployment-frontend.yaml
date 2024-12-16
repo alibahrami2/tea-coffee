@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tea-coffee-front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tea-coffee-front
+  template:
+    metadata:
+      labels:
+        app: tea-coffee-front
+    spec:
+      containers:
+      - name: tea-coffee-front
+        image: frontend:v1
+        ports:
+        - containerPort: 80
+        env:
+        - name: tea-coffee-front-url
+          value: "http://localhost:3000"
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: tea-coffee-front
+spec:
+  type: LoadBalancer
+  selector:
+    app: tea-coffee-front
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+
